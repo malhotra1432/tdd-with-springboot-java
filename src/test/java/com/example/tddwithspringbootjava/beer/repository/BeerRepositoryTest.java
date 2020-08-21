@@ -1,29 +1,27 @@
-package com.example.tddwithspringbootjava.beer.services;
+package com.example.tddwithspringbootjava.beer.repository;
 
 import com.example.tddwithspringbootjava.beer.model.Beer;
-import com.example.tddwithspringbootjava.beer.repository.BeerRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-class BeerServiceTest {
-    @Mock
+class BeerRepositoryTest {
     private BeerRepository beerRepository;
 
-    @InjectMocks
-    private BeerService beerService;
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Test
-    void shouldFetchBeerList(){
+    void shouldFetchBeerList() throws Exception {
         var expectedBeerList = Beer.builder()
                 .beerBrand("KingFisher")
                 .beerName("Thunderbold")
@@ -31,9 +29,8 @@ class BeerServiceTest {
                 .beerStatus(true)
                 .beerType("Strong")
                 .build();
-        when(beerRepository.findAll()).thenReturn(List.of(expectedBeerList));
-        List<Beer> actualBeerList = beerService.listBeer();
-        assertThat(actualBeerList).isEqualTo(List.of(expectedBeerList));
+        List<Beer> beerList = beerRepository.findAll();
+        assertThat(beerList).isEqualTo(List.of(expectedBeerList));
     }
 
 }
